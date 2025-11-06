@@ -1,0 +1,124 @@
+:root {
+    --theme: #09c362;
+    --thetitle: #586c97;
+    --backbg: #f5f5f5;
+    --cobg: #fff;
+    --textbs: #fff;
+    --texths: #888;
+}
+
+body {
+    margin: 0;
+    background-color: var(--backbg);
+    font-family: "Microsoft YaHei", sans-serif;
+    display: flex;
+    justify-content: center;
+}
+.main-container {
+    width: 520px;
+    background-color: var(--cobg);
+}
+.sh-main-head-img {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background-image: url("../images/bg.jpg");
+    background-size: cover;
+    background-position: center;
+}
+.sh-main-head-headimg {
+    position: absolute;
+    bottom: -60px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.sh-main-head-headimg-tx {
+    display: flex;
+    align-items: center;
+}
+.sh-main-head-headimg-tx h4 {
+    margin: 0 15px 0 0;
+    font-size: 18px;
+    color: var(--textbs);
+}
+.sh-main-head-headimg-tx img {
+    width: 75px;
+    height: 75px;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+.sh-main-head-headimg-qm p {
+    margin: 8px 5px 0 0;
+    font-size: 14px;
+    color: var(--texths);
+    background: rgba(255,255,255,0.8);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.feed {
+    margin-top: 80px;
+    padding: 20px;
+}
+.sh-content {
+    display: flex;
+    margin-bottom: 25px;
+}
+.sh-content-left img {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+}
+.sh-content-right {
+    flex: 1;
+    margin-left: 10px;
+}
+.sh-content-right-head-title p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--thetitle);
+    font-weight: bold;
+}
+.sh-content-right span {
+    display: block;
+    margin: 6px 0;
+    color: #111;
+}
+.sh-content-right-imgs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+}
+.sh-content-right-imgs img {
+    width: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+}
+.sh-content-right-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+.sh-two-dot-btn {
+    width: 30px;
+    height: 20px;
+    background: var(--backbg);
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.sh-two-dot-btn::before,
+.sh-two-dot-btn::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    background: #555;
+    border-radius: 50%;
+    margin: 0 2px;
+}

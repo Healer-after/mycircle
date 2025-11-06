@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朋友圈</title>
+
+<!-- Fancybox CSS -->
+<link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
+
+<style>
+:root {
+    --theme: #09c362;
+    --thetitle: #586c97;
+    --backbg: rgb(245,245,245);
+    --cobg: rgb(255,255,255);
+    --texths: rgb(120,120,120);
+    --textbs: rgb(255,255,255);
+}
+
+/* 页面整体 */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--backbg);
+    font-family: "Microsoft YaHei", sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+/* 主容器 */
+.main-container {
+    width: 520px;
+    background-color: var(--cobg);
+}
+
+/* 顶部背景 */
+.sh-main-head-img {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: url("assets/images/bg.jpg") center bottom / cover no-repeat;
+}
+
+/* 头像、名字、签名 */
+.sh-main-head-headimg {
+    position: absolute;
+    bottom: -60px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.sh-main-head-headimg-tx {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.sh-main-head-headimg-tx h4 {
+    margin: 0 15px 0 0;
+    font-size: 18px;
+    color: var(--textbs);
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+.sh-main-head-headimg-tx img {
+    width: 75px;
+    height: 75px;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+.sh-main-head-headimg-qm p {
+    margin: 8px 5px 0 0;
+    font-size: 14px;
+    color: var(--texths);
+    background: rgba(255,255,255,0.8);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* 动态区块 */
+.feed {
+    margin-top: 80px;
+    padding: 20px;
+}
+.sh-content {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+.sh-content-left img {
+    width: 45px;
+    height: 45px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+.sh-content-right {
+    flex: 1;
+    margin-left: 10px;
+}
+.sh-content-right-head-title p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--thetitle);
+    font-weight: bold;
+}
+.sh-content-right-head span {
+    display: block;
+    margin: 6px 0;
+    color: #111;
+    line-height: 1.6;
+}
+
+/* 九宫格图片 */
+.sh-content-right-img {
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 5px;
+}
+.sh-content-right-img img {
+    width: 100%;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* 时间 + 两个点 */
+.sh-content-right-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    position: relative;
+}
+.sh-content-right-time-left span {
+    font-size: 12px;
+    color: #999;
+}
+
+/* 两个点按钮 */
+.sh-two-dot-btn {
+    width: 30px;
+    height: 20px;
+    background: var(--backbg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+}
+.sh-two-dot-btn::before,
+.sh-two-dot-btn::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    background: #555;
+    border-radius: 50%;
+    margin: 0 2px;
+}
+</style>
+</head>
+
+<body>
+<div class="main-container">
+    <!-- 顶部背景 -->
+    <div class="sh-main-head-img">
+        <div class="sh-main-head-headimg">
+            <div class="sh-main-head-headimg-tx">
+                <h4>舜禹工作室</h4>
+                <a href="javascript:;"><img src="assets/images/avatar.jpg" alt="头像"></a>
+            </div>
+            <div class="sh-main-head-headimg-qm">
+                <p>微信: GPT2888</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 动态 -->
+    <div class="feed">
+
+        <!-- 示例动态 -->
+        <div class="sh-content">
+            <div class="sh-content-left">
+                <img src="assets/images/avatar.jpg" alt="头像">
+            </div>
+            <div class="sh-content-right">
+                <div class="sh-content-right-head">
+                    <div class="sh-content-right-head-title">
+                        <p>舜禹工作室</p>
+                    </div>
+                    <span>
+                        新品发布，电信飞龙卡（政企卡）<br>
+                        19元200G通用+600分钟<br>
+                        4年19，改定位激活
+                    </span>
+
+                    <div class="sh-content-right-img">
+                        <a data-fancybox="gallery" href="posts/2025-11-06-新品发布-1.jpg">
+                            <img src="posts/2025-11-06-新品发布-1.jpg">
+                        </a>
+                        <a data-fancybox="gallery" href="posts/2025-11-06-新品发布-2.jpg">
+                            <img src="posts/2025-11-06-新品发布-2.jpg">
+                        </a>
+                        <a data-fancybox="gallery" href="posts/2025-11-06-新品发布-3.jpg">
+                            <img src="posts/2025-11-06-新品发布-3.jpg">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sh-content-right-time">
+                    <div class="sh-content-right-time-left" data-time="2025-11-06T15:45:00"></div>
+                    <div class="sh-two-dot-btn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JS 引入 -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.fancybox.min.js"></script>
+
+<script>
+// =============================
+// 自动计算时间差显示
+// =============================
+function formatTimeAgo(timeString) {
+    const now = new Date();
+    const past = new Date(timeString);
+    const diff = (now - past) / 1000;
+    if (diff < 60) return "刚刚";
+    if (diff < 3600) return Math.floor(diff / 60) + "分钟前";
+    if (diff < 86400) return Math.floor(diff / 3600) + "小时前";
+    if (diff < 172800) return "昨天";
+    if (diff < 604800) return Math.floor(diff / 86400) + "天前";
+    if (diff < 2592000) return Math.floor(diff / 604800) + "周前";
+    return past.toLocaleDateString();
+}
+
+function updateTimeDisplays() {
+    document.querySelectorAll(".sh-content-right-time-left").forEach(el => {
+        const time = el.dataset.time;
+        if (time) el.innerHTML = `<span>${formatTimeAgo(time)}</span>`;
+    });
+}
+
+updateTimeDisplays();
+setInterval(updateTimeDisplays, 60000);
+</script>
+</body>
+</html>
