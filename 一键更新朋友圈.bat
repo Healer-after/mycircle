@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 title 🌀 一键更新朋友圈到 GitHub 并预览
 color 0a
 
