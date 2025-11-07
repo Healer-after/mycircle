@@ -1,53 +1,48 @@
+# -*- coding: utf-8 -*-
+"""
+自动提交朋友圈项目到 GitHub
+支持中文路径与 UTF-8 提交信息
+"""
+
 import os
 import subprocess
-import time
-import json
-from pathlib import Path
+from datetime import datetime
 
-# === 基础路径设置 ===
-ROOT = Path(__file__).parent
-DATA_FILE = ROOT / "data" / "posts.json"
-POSTS_DIR = ROOT / "posts"
+# 项目路径
+project_dir = r"C:\Users\Arrebol\Desktop\mycircle"
 
-# === 第一步：运行 generate_posts.py ===
-print("🌀 正在生成最新动态数据...")
-subprocess.run("python generate_posts.py", shell=True)
+def run_cmd(cmd):
+    """执行命令并实时打印输出"""
+    result = subprocess.run(cmd, shell=True, cwd=project_dir, text=True, encoding='utf-8')
+    return result.returncode
 
-# === 第二步：检测是否有更新 ===
-print("🔍 检查是否有新动态...")
+def main():
+    print("🚀 正在生成最新动态数据...")
 
-# 获取 git 状态
-result = subprocess.run("git status --porcelain", shell=True, capture_output=True, text=True)
-changed_files = result.stdout.strip().split("\n")
+    # 运行生成脚本
+    run_cmd("python generate_posts.py")
 
-# 筛选出变化文件
-changed_files = [f for f in changed_files if f.strip() != ""]
+    print("✅ 数据已生成，准备提交到 GitHub...")
 
-if not changed_files:
-    print("🟢 没有检测到新的动态或文件更改，跳过推送。")
-else:
-    print("📝 检测到变动的文件：")
-    for f in changed_files:
-        print("  •", f)
+    # Git 配置修正，确保中文不会乱码
+    subprocess.run("git config --global core.quotepath false", shell=True)
+    subprocess.run("git config --global i18n.commitencoding utf-8", shell=True)
+    subprocess.run("git config --global i18n.logoutputencoding utf-8", shell=True)
+    subprocess.run("git config --global gui.encoding utf-8", shell=True)
 
-    # === 第三步：执行 Git 提交 ===
-    commit_message = f"自动更新朋友圈动态 {time.strftime('%Y-%m-%d %H:%M:%S')}"
-    commands = [
-        "git add data/posts.json",
-        "git add posts/",
-        f'git commit -m "{commit_message}"',
-        "git push"
-    ]
+    # 添加所有更改
+    run_cmd("git add .")
 
-    print("\n🚀 开始上传到 GitHub...\n")
-    for cmd in commands:
-        print(f"👉 {cmd}")
-        result = subprocess.run(cmd, shell=True)
-        if result.returncode != 0:
-            print(f"⚠️ 命令执行失败: {cmd}")
-            break
+    # 提交信息
+    commit_msg = f"自动更新朋友圈动态 {datetime.now():%Y-%m-%d %H:%M:%S}"
+    run_cmd(f'git commit -m "{commit_msg}"')
 
-    print("\n✅ 已成功推送到 GitHub！")
-    print("🌐 可访问最新动态页面： https://healer-after.github.io/mycircle/")
+    # 推送
+    print("🌍 正在推送到 GitHub...")
+    run_cmd("git push")
 
-print("\n🎉 任务完成！")
+    print("✅ 已成功更新到 GitHub！")
+    print("🌐 可刷新你的 GitHub Pages 查看最新朋友圈动态。")
+
+if __name__ == "__main__":
+    main()
