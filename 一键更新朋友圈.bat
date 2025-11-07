@@ -1,45 +1,69 @@
 @echo off
 chcp 65001 >nul
-title 🌀 一键更新朋友圈到 GitHub 并预览
-color 0a
+title 一键更新朋友圈
 
-:: === 1. 进入项目目录 ===
-cd /d "C:\Users\Arrebol\Desktop\mycircle"
+echo.
+echo ==========================================
+echo 一键更新朋友圈脚本
+echo 项目目录：%cd%
+echo ==========================================
+echo.
 
-echo 🚀 正在生成新的动态数据...
+:: 1. 检查 Python 是否存在
+python --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo 未检测到 Python，请先安装 Python 并加入系统 PATH。
+    pause
+    exit /b
+)
+
+:: 2. 生成动态数据
+echo 正在生成最新动态数据...
 python generate_posts.py
 if %errorlevel% neq 0 (
-    echo ❌ Python 脚本执行失败，请检查 generate_posts.py！
+    echo 生成动态数据失败，请检查 generate_posts.py。
     pause
     exit /b
 )
-
-echo ✅ 已生成最新 posts.json 文件
+echo 已生成 data/posts.json
 echo.
 
-:: === 2. 提交并推送到 GitHub ===
-echo 📤 正在推送到 GitHub...
-git add .
-git commit -m "自动更新朋友圈动态"
-git push
+:: 3. Git 配置
+git config --global core.quotepath false
+git config --global i18n.commitencoding utf-8
+git config --global i18n.logoutputencoding utf-8
 
+:: 4. 添加文件
+git add -A
+
+:: 5. 获取当前时间
+for /f "tokens=1-3 delims=/ " %%a in ("%date%") do (
+    set today=%%a-%%b-%%c
+)
+set timestr=%time:~0,2%:%time:~3,2%
+
+:: 6. 提交
+git commit -m "自动更新朋友圈动态 %today% %timestr%" --no-verify
 if %errorlevel% neq 0 (
-    echo ❌ 推送失败，请检查网络或 GitHub 设置。
+    echo 没有新的改动需要提交。
+) else (
+    echo 已提交最新动态。
+)
+
+:: 7. 推送到 GitHub
+echo 正在推送到 GitHub...
+git push origin master
+if %errorlevel% neq 0 (
+    echo 推送失败，请检查网络或 GitHub 连接。
     pause
     exit /b
 )
-
-echo ✅ 成功更新到 GitHub！
+echo 推送成功。
 echo.
 
-:: === 3. 等待 GitHub Pages 更新（可选 5 秒延迟）===
-echo ⏳ 正在等待 GitHub Pages 同步更新...
-timeout /t 5 >nul
+:: 8. 打开网页
+start https://healer-after.github.io/mycircle/
 
-:: === 4. 自动打开网页预览 ===
-set "url=https://healer-after.github.io/mycircle/"
-echo 🌐 正在打开网页：%url%
-start "" "%url%"
-
-echo ✅ 全部完成！请在浏览器中查看最新朋友圈！
+echo 操作完成，请刷新网页查看最新朋友圈。
 pause
+exit /b
