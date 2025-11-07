@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>朋友圈 - 舜禹工作室</title>
 
-<!-- 引入 Fancybox -->
-<link rel="stylesheet" href="assets/css/jquery.fancybox.min.css">
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.fancybox.min.js"></script>
+<!-- ✅ 引入 jQuery 和 Fancybox CDN -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 <style>
 :root {
@@ -29,16 +29,9 @@
     --bodys: #f0f0f0;
     --dzplcdfg: #383e41;
     --dbztlys: rgba(240, 240, 240, 0.8);
-    --dbztlysh: rgba(240, 240, 240, 0);
-    --dbztlyshs: rgba(52, 52, 52, 0.8);
     --gdwys: rgb(195 195 195);
-    --zsgfh: rgb(42,41,41,0.10);
-    --imgbgy: rgb(245,245,245,0.60);
-    --menu: rgb(200,200,200,0.40);
-    --adgg: rgb(175,175,175);
 }
 
-/* 页面整体 */
 body {
     margin: 0;
     padding: 0;
@@ -48,7 +41,6 @@ body {
     justify-content: center;
 }
 
-/* 固定宽度容器 */
 .main-container {
     width: 520px;
     background-color: var(--cobg);
@@ -64,7 +56,7 @@ body {
     background-position: center bottom;
 }
 
-/* 头像与昵称 */
+/* 头像区域 */
 .sh-main-head-headimg {
     position: absolute;
     bottom: -60px;
@@ -72,6 +64,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    z-index: 2;
 }
 .sh-main-head-headimg-tx {
     display: flex;
@@ -100,7 +93,7 @@ body {
     border-radius: 4px;
 }
 
-/* 动态内容 */
+/* 动态区块 */
 .feed {
     margin-top: 80px;
     padding: 20px;
@@ -122,6 +115,7 @@ body {
 }
 .sh-content-right-head-title p {
     margin: 0;
+    font-size: 15px;
     font-weight: bold;
     color: var(--thetitle);
 }
@@ -130,43 +124,32 @@ body {
     margin: 6px 0;
     color: #111;
     line-height: 1.6;
-    white-space: pre-wrap;
 }
-
-/* 图片九宫格 */
 .sh-content-right-img {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 5px;
+    width: 60%;
     margin-top: 8px;
 }
 .sh-content-right-img img {
     width: 100%;
     border-radius: 6px;
     object-fit: cover;
-    cursor: pointer;
 }
 
-/* 视频样式 */
-.sh-content-right-video video {
-    width: 100%;
-    border-radius: 6px;
-    margin-top: 8px;
-}
-
-/* 时间与右侧操作按钮 */
+/* 时间与操作 */
 .sh-content-right-time {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 8px;
+    position: relative;
 }
 .sh-content-right-time-left span {
     font-size: 12px;
     color: #999;
 }
-
-/* 两个点按钮 */
 .sh-two-dot-btn {
     width: 30px;
     height: 20px;
@@ -190,16 +173,15 @@ body {
 
 <body>
 <div class="main-container">
-
-    <!-- 顶部 -->
+    <!-- 顶部背景 -->
     <div class="sh-main-head-img">
         <div class="sh-main-head-headimg">
             <div class="sh-main-head-headimg-tx">
                 <h4>舜禹工作室</h4>
-                <img src="assets/images/avatar.jpg" alt="头像">
+                <a href="#"><img src="assets/images/avatar.jpg" alt="头像"></a>
             </div>
             <div class="sh-main-head-headimg-qm">
-                <p>微信：GPT2888</p>
+                <p>微信: GPT2888</p>
             </div>
         </div>
     </div>
@@ -209,71 +191,56 @@ body {
 </div>
 
 <script>
+// ✅ 时间显示函数
 function timeAgo(timestamp) {
     const now = Date.now() / 1000;
-    const diff = now - timestamp;
+    const diff = Math.floor(now - timestamp);
     if (diff < 60) return "刚刚";
     if (diff < 3600) return Math.floor(diff / 60) + "分钟前";
     if (diff < 86400) return Math.floor(diff / 3600) + "小时前";
-    if (diff < 2592000) return Math.floor(diff / 86400) + "天前";
-    const d = new Date(timestamp * 1000);
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    return Math.floor(diff / 86400) + "天前";
 }
 
-$(function () {
-    $.getJSON("data/posts.json", function (posts) {
-        let html = "";
-        posts.forEach(post => {
-            const timeText = timeAgo(post.timestamp);
-            let mediaHTML = "";
-
-            // 图片
-            if (post.files) {
-                const images = post.files.filter(f => /\.(jpg|jpeg|png|gif)$/i.test(f));
-                if (images.length > 0) {
-                    mediaHTML += `<div class="sh-content-right-img">` +
-                        images.map(f => `
+// ✅ 从 GitHub Pages 加载 posts.json
+fetch("https://healer-after.github.io/mycircle/data/posts.json")
+.then(res => res.json())
+.then(posts => {
+    posts.sort((a, b) => b.timestamp - a.timestamp);
+    const feed = document.getElementById("feed");
+    posts.forEach(post => {
+        const div = document.createElement("div");
+        div.className = "sh-content";
+        div.innerHTML = `
+            <div class="sh-content-left">
+                <img src="assets/images/avatar.jpg" alt="头像">
+            </div>
+            <div class="sh-content-right">
+                <div class="sh-content-right-head">
+                    <div class="sh-content-right-head-title">
+                        <p>舜禹工作室</p>
+                    </div>
+                    <span>${post.text.replace(/\n/g, "<br>")}</span>
+                    <div class="sh-content-right-img">
+                        ${post.files.map(f => `
                             <a data-fancybox="gallery" href="posts/${f}">
                                 <img src="posts/${f}" alt="">
-                            </a>`).join('') +
-                        `</div>`;
-                }
-
-                // 视频
-                const videos = post.files.filter(f => /\.mp4$/i.test(f));
-                if (videos.length > 0) {
-                    mediaHTML += videos.map(v => `
-                        <div class="sh-content-right-video">
-                            <video controls src="posts/${v}"></video>
-                        </div>`).join('');
-                }
-            }
-
-            html += `
-                <div class="sh-content">
-                    <div class="sh-content-left">
-                        <img src="assets/images/avatar.jpg" alt="头像">
+                            </a>
+                        `).join('')}
                     </div>
-                    <div class="sh-content-right">
-                        <div class="sh-content-right-head">
-                            <div class="sh-content-right-head-title"><p>舜禹工作室</p></div>
-                            <span>${post.text || ""}</span>
-                            ${mediaHTML}
-                        </div>
-                        <div class="sh-content-right-time">
-                            <div class="sh-content-right-time-left"><span>${timeText}</span></div>
-                            <div class="sh-two-dot-btn"></div>
-                        </div>
+                </div>
+                <div class="sh-content-right-time">
+                    <div class="sh-content-right-time-left">
+                        <span>${timeAgo(post.timestamp)}</span>
                     </div>
-                </div>`;
-        });
-
-        $("#feed").html(html);
-        $('[data-fancybox="gallery"]').fancybox({
-            loop: true,
-            buttons: ["zoom", "close"]
-        });
+                    <div class="sh-two-dot-btn"></div>
+                </div>
+            </div>
+        `;
+        feed.appendChild(div);
     });
+})
+.catch(err => {
+    console.error("加载 posts.json 出错：", err);
 });
 </script>
 </body>
